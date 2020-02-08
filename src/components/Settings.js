@@ -52,7 +52,7 @@ export default class Settings extends Component {
     }
 
     componentDidMount() {
-        this.setState({minHeight: `calc(100vh - ${this.navRef.current.clientHeight}px)`})
+        this.setState({minHeight: `calc(100vh - 2*${this.navRef.current.clientHeight}px)`})
     }
 
     onChangeValue = event => {
@@ -104,7 +104,7 @@ export default class Settings extends Component {
                 <Container fluid>
                     <Row className="p-4"
                          style={{minHeight: this.state.minHeight, display: "flex", alignItems: "center"}}>
-                        <Col md={{span: 4, offset: 4}}>
+                        <Col md={{span: 6, offset: 3}} xl={{span: 4, offset: 4}}>
                             <InputGroup className="mb-3">
                                 <InputGroup.Prepend>
                                     <InputGroup.Text>Base URL</InputGroup.Text>

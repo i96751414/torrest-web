@@ -13,6 +13,15 @@ export const snSettings = "settings";
 export const snPauseResume = "pause_resume";
 export const snShutdown = "shutdown";
 
+const StyledSideNav = styled(SideNav)`
+    position: relative;
+    float: left;
+    min-height: 100vh;
+    background-color: #343a40;
+    opacity: 0.9;
+`;
+StyledSideNav.defaultProps = SideNav.defaultProps;
+
 const StyledNav = styled(Nav)`
     && [class*="sidenav-navitem--"],
     && [class*="sidenav-navitem--"]:hover {
@@ -50,9 +59,9 @@ export default class TorrestSideNav extends Component {
 
     render() {
         return (
-            <SideNav style={{minHeight: this.state.minHeight, backgroundColor: "#343a40", opacity: 0.9}}
-                     onSelect={selected => this.props.setSelected(selected)}
-                     onToggle={expanded => this.props.setExpanded(expanded)}>
+            <StyledSideNav
+                onSelect={selected => this.props.setSelected(selected)}
+                onToggle={expanded => this.props.setExpanded(expanded)}>
                 <Toggle id="toggle"/>
                 <StyledNav defaultSelected={this.props.selected} id="nav">
                     <NavItem eventKey={snAll}>
@@ -83,7 +92,7 @@ export default class TorrestSideNav extends Component {
                         <NavText>Shutdown</NavText>
                     </NavItem>
                 </StyledNav>
-            </SideNav>
+            </StyledSideNav>
         );
     }
 }

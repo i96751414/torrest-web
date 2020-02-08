@@ -8,7 +8,6 @@ import {withAlert} from "react-alert";
 
 const Main = styled.main`
     position: relative;
-    overflow: hidden;
     transition: all .2s;
     margin-left: ${props => (props.expanded ? 240 : 64)}px;
 `;

@@ -3,8 +3,10 @@ import './App.css';
 import TorrestSideNav, {snAll, snSettings} from "./components/SideNav";
 import Settings, {getSettings} from "./components/Settings";
 import styled from 'styled-components';
+import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {withAlert} from "react-alert";
+import axios from "axios";
 
 const Main = styled.main`
     position: relative;
@@ -36,7 +38,12 @@ class App extends Component {
     }
 
     setShutdown = () => {
-        this.setState({shutdown: true});
+        axios.get(`${this.settings.baseUrl}/shutdown`)
+            .then(() => this.setState({shutdown: true}))
+            .catch((e) => {
+                console.log(e);
+                this.props.alert.error("Failed shutting down");
+            });
     };
 
     setExpanded = expanded => {
@@ -49,14 +56,15 @@ class App extends Component {
 
     updatePaused = () => {
         const paused = this.state.paused;
-        if (paused) {
-            // TODO: Resume
-            this.props.alert.show("Service resumed")
-        } else {
-            // TODO: Pause
-            this.props.alert.show("Service paused")
-        }
-        this.setState({paused: !paused});
+        axios.get(`${this.settings.baseUrl}/${paused ? "resume" : "pause"}`)
+            .then(() => {
+                this.setState({paused: !paused});
+                this.props.alert.show(`Service ${paused ? "resumed" : "paused"}`);
+            })
+            .catch((e) => {
+                console.log(e);
+                this.props.alert.error(`Failed ${paused ? "resuming" : "pausing"}`);
+            });
     };
 
     renderSelected() {

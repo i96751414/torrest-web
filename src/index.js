@@ -7,7 +7,12 @@ import AlertTemplate from "./templates/alert-template.js";
 import {positions, Provider} from "react-alert";
 
 const Root = () => (
-    <Provider template={AlertTemplate} timeout={3000} position={positions.BOTTOM_RIGHT}>
+    <Provider
+        template={AlertTemplate}
+        timeout={3000}
+        position={positions.BOTTOM_RIGHT}
+        containerStyle={{zIndex: 2000}}
+    >
         <App/>
     </Provider>
 );

@@ -3,13 +3,12 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import styled from "styled-components";
+import OverlayTooltip from "./OverlayTooltip";
 
 const CustomFormControl = styled(FormControl)`
     background-color: rgba(255,255,255,0.5);
@@ -45,10 +44,6 @@ export default class Settings extends Component {
 
         this.settings = {...this.props.settings};
         this.navRef = createRef();
-    }
-
-    renderSaveTooltip(props) {
-        return <Tooltip {...props} show={props.show.toString()}>Save settings</Tooltip>;
     }
 
     componentDidMount() {
@@ -93,13 +88,9 @@ export default class Settings extends Component {
                 <Navbar ref={this.navRef} bg="dark" variant="dark" style={{opacity: 0.9}}>
                     <Navbar.Brand>Torrest - settings</Navbar.Brand>
                     <Nav className="mr-auto"/>
-                    <OverlayTrigger
-                        placement="bottom"
-                        delay={{show: 1000, hide: 400}}
-                        overlay={this.renderSaveTooltip}
-                    >
+                    <OverlayTooltip message="Save settings">
                         <Button variant="outline-info" onClick={this.saveSettings}>Save</Button>
-                    </OverlayTrigger>
+                    </OverlayTooltip>
                 </Navbar>
                 <Container fluid>
                     <Row className="p-4"

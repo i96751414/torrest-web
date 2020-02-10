@@ -84,9 +84,7 @@ export default class TorrestSideNav extends Component {
                     </NavItem>
                     <NavItem eventKey={snPauseResume} disabled={true} onClick={this.props.onPause}>
                         <NavIcon>
-                            {this.props.paused ?
-                                <Icon className="fa fa-play"/> :
-                                <Icon className="fa fa-pause"/>}
+                            <Icon className={`fa fa-${this.props.paused ? "play" : "pause"}`}/>
                         </NavIcon>
                         <NavText>{this.props.paused ? "Resume" : "Pause"}</NavText>
                     </NavItem>

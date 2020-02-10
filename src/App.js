@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import TorrestSideNav, {snAll, snSettings} from "./components/SideNav";
 import Settings, {getSettings} from "./components/Settings";
+import Torrents from "./components/Torrents";
 import styled from 'styled-components';
 import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,7 +16,7 @@ const Main = styled.main`
 `;
 
 const Disable = () => (<div style={{
-    zIndex: 2000,
+    zIndex: 2001,
     position: "fixed",
     background: "black",
     width: "100%",
@@ -70,8 +71,7 @@ class App extends Component {
     renderSelected() {
         switch (this.state.selected) {
             case snAll:
-                // TODO
-                return "";
+                return <Torrents settings={this.settings} alert={this.props.alert}/>;
             case snSettings:
                 return <Settings settings={this.settings} alert={this.props.alert}/>;
             default:

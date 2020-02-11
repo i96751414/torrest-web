@@ -4,23 +4,9 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import styled from "styled-components";
-import OverlayTooltip from "./OverlayTooltip";
-
-const CustomFormControl = styled(FormControl)`
-    background-color: rgba(255,255,255,0.5);
-    
-    &&:focus {
-        background-color: rgba(255,255,255,0.9);
-    }
-    
-    &&:disabled {
-        background-color: rgba(255,255,255,0.6);
-    }
-`;
+import {OverlayTooltip, CustomFormControl} from "./BootsrapUtils";
 
 export function getSettings() {
     const baseUrl = localStorage.getItem("baseUrl");

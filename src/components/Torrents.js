@@ -3,19 +3,8 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import styled from "styled-components";
-import {CustomFormControl, OverlayTooltip} from "./BootsrapUtils";
+import {CustomFormControl, OverlayTooltip, CircleButton, CustomModal} from "./BootsrapUtils";
 import axios from "axios";
-
-const NavButton = styled(Button)`
-    margin: 0px 5px;
-    border-radius: 19px;
-    height: 38px;
-    width: 38px;
-    font-size: 16px;
-    padding: 6px;
-    text-align: center;
-`;
 
 export default class Torrents extends PureComponent {
     state = {
@@ -81,33 +70,32 @@ export default class Torrents extends PureComponent {
                                onChange={this.onFileUpload}
                                style={{display: "none"}}/>
                         <OverlayTooltip message="Add file">
-                            <NavButton variant="outline-light" onClick={this.addFileOnClick}>
+                            <CircleButton variant="outline-light" onClick={this.addFileOnClick}>
                                 <i className="fa fa-file-upload"/>
-                            </NavButton>
+                            </CircleButton>
                         </OverlayTooltip>
                         <OverlayTooltip message="Add magnet">
-                            <NavButton variant="outline-light" onClick={this.showMagnetModal}>
+                            <CircleButton variant="outline-light" onClick={this.showMagnetModal}>
                                 <i className="fa fa-link"/>
-                            </NavButton>
+                            </CircleButton>
                         </OverlayTooltip>
                         <Nav className="mr-auto"/>
                         <OverlayTooltip message="Remove torrent">
-                            <NavButton variant="outline-light"><i className="fa fa-minus"/></NavButton>
+                            <CircleButton variant="outline-light"><i className="fa fa-minus"/></CircleButton>
                         </OverlayTooltip>
                         <OverlayTooltip message="Pause torrent">
-                            <NavButton variant="outline-light"><i className="fa fa-pause"/></NavButton>
+                            <CircleButton variant="outline-light"><i className="fa fa-pause"/></CircleButton>
                         </OverlayTooltip>
                         <OverlayTooltip message="Play movie">
-                            <NavButton variant="outline-light"><i className="fa fa-play-circle"/></NavButton>
+                            <CircleButton variant="outline-light"><i className="fa fa-play-circle"/></CircleButton>
                         </OverlayTooltip>
                     </Navbar.Collapse>
                 </Navbar>
-                <Modal
+                <CustomModal
                     show={this.state.showMagnetModal}
                     onHide={this.hideMagnetModal}
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"
-                    className="custom-modal"
                     centered
                 >
                     <Modal.Header style={{borderBottom: "0px"}} closeButton>
@@ -127,7 +115,7 @@ export default class Torrents extends PureComponent {
                         <Button variant="outline-info" onClick={this.onAddMagnetUri}>Add</Button>
                         <Button variant="outline-info" onClick={this.hideMagnetModal}>Close</Button>
                     </Modal.Footer>
-                </Modal>
+                </CustomModal>
             </div>
         )
     }

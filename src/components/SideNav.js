@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {PureComponent} from "react";
 import SideNav, {Nav, NavIcon, NavItem, NavText, Toggle} from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import styled from 'styled-components';
@@ -46,27 +46,15 @@ const Hr = styled.hr`
     margin: 8px;
 `;
 
-export default class TorrestSideNav extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            minHeight: 0
-        };
-    }
-
-    componentDidMount() {
-        this.setState({
-            minHeight: document.getElementById('nav').clientHeight +
-                document.getElementById('toggle').clientHeight
-        })
-    }
+export default class TorrestSideNav extends PureComponent {
+    onSelect = selected => this.props.setSelected(selected);
+    onToggle = expanded => this.props.setExpanded(expanded);
 
     render() {
         return (
             <StyledSideNav
-                onSelect={selected => this.props.setSelected(selected)}
-                onToggle={expanded => this.props.setExpanded(expanded)}>
+                onSelect={this.onSelect}
+                onToggle={this.onToggle}>
                 <Toggle id="toggle"/>
                 <StyledNav defaultSelected={this.props.selected} id="nav">
                     <NavItem eventKey={snAll}>

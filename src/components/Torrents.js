@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {PureComponent} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
@@ -17,14 +17,21 @@ const NavButton = styled(Button)`
     text-align: center;
 `;
 
-export default class Torrents extends Component {
-    constructor(props) {
-        super(props);
+export default class Torrents extends PureComponent {
+    state = {
+        showMagnetModal: false
+    };
 
-        this.state = {
-            showMagnetModal: false
+    setMagnetUriRef = ref => this.magnetUri = ref;
+    setUploadRef = ref => this.upload = ref;
+    addFileOnClick = () => this.upload.click();
+    showMagnetModal = () => this.setState({showMagnetModal: true});
+    hideMagnetModal = () => this.setState({showMagnetModal: false});
+    magnetModalOnKeyPress = event => {
+        if (event.key === "Enter") {
+            this.onAddMagnetUri()
         }
-    }
+    };
 
     onFileUpload = () => {
         const file = this.upload.files[0];
@@ -51,9 +58,15 @@ export default class Torrents extends Component {
                 .catch(() => {
                     this.props.alert.error("Failed adding magnet");
                 });
-            this.setState({showMagnetModal: false});
+            this.hideMagnetModal();
         }
     };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.state.showMagnetModal) {
+            this.magnetUri.focus();
+        }
+    }
 
     render() {
         return (
@@ -64,16 +77,16 @@ export default class Torrents extends Component {
                     <Navbar.Collapse>
                         <input type="file"
                                accept=".torrent"
-                               ref={ref => this.upload = ref}
+                               ref={this.setUploadRef}
                                onChange={this.onFileUpload}
                                style={{display: "none"}}/>
                         <OverlayTooltip message="Add file">
-                            <NavButton variant="outline-light" onClick={() => this.upload.click()}>
+                            <NavButton variant="outline-light" onClick={this.addFileOnClick}>
                                 <i className="fa fa-file-upload"/>
                             </NavButton>
                         </OverlayTooltip>
                         <OverlayTooltip message="Add magnet">
-                            <NavButton variant="outline-light" onClick={() => this.setState({showMagnetModal: true})}>
+                            <NavButton variant="outline-light" onClick={this.showMagnetModal}>
                                 <i className="fa fa-link"/>
                             </NavButton>
                         </OverlayTooltip>
@@ -91,7 +104,7 @@ export default class Torrents extends Component {
                 </Navbar>
                 <Modal
                     show={this.state.showMagnetModal}
-                    onHide={() => this.setState({showMagnetModal: false})}
+                    onHide={this.hideMagnetModal}
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"
                     className="custom-modal"
@@ -103,22 +116,16 @@ export default class Torrents extends Component {
                     <Modal.Body>
                         <CustomFormControl
                             type="text"
-                            ref={ref => this.magnetUri = ref}
+                            ref={this.setMagnetUriRef}
                             placeholder="Magnet URI"
                             aria-label="Magnet URI"
-                            onKeyPress={event => {
-                                if (event.key === "Enter") {
-                                    this.onAddMagnetUri()
-                                }
-                            }}
+                            onKeyPress={this.magnetModalOnKeyPress}
                             required
                         />
                     </Modal.Body>
                     <Modal.Footer style={{borderTop: "0px"}}>
-                        <Button variant="outline-info"
-                                onClick={this.onAddMagnetUri}>Add</Button>
-                        <Button variant="outline-info"
-                                onClick={() => this.setState({showMagnetModal: false})}>Close</Button>
+                        <Button variant="outline-info" onClick={this.onAddMagnetUri}>Add</Button>
+                        <Button variant="outline-info" onClick={this.hideMagnetModal}>Close</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

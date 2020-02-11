@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {PureComponent} from "react";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import FormControl from "react-bootstrap/FormControl";
@@ -16,7 +16,7 @@ export const CustomFormControl = styled(FormControl)`
     }
 `;
 
-export class OverlayTooltip extends Component {
+export class OverlayTooltip extends PureComponent {
     renderTooltip = props => {
         return <Tooltip {...props} show={props.show.toString()}>{this.props.message}</Tooltip>;
     };

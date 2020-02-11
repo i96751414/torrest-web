@@ -1,4 +1,4 @@
-import React, {Component, createRef} from "react";
+import React, {createRef, PureComponent} from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {OverlayTooltip, CustomFormControl} from "./BootsrapUtils";
+import {CustomFormControl, OverlayTooltip} from "./BootsrapUtils";
 
 export function getSettings() {
     const baseUrl = localStorage.getItem("baseUrl");
@@ -20,17 +20,16 @@ export function getSettings() {
     }
 }
 
-export default class Settings extends Component {
+export default class Settings extends PureComponent {
     constructor(props) {
         super(props);
-
-        this.state = {
-            minHeight: 0
-        };
-
         this.settings = {...this.props.settings};
         this.navRef = createRef();
     }
+
+    state = {
+        minHeight: 0
+    };
 
     componentDidMount() {
         this.setState({minHeight: `calc(100vh - 2*${this.navRef.current.clientHeight}px)`})

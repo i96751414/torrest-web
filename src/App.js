@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import './App.css';
 import TorrestSideNav, {snAll, snSettings} from "./components/SideNav";
 import Settings, {getSettings} from "./components/Settings";
@@ -24,19 +24,18 @@ const Disable = () => (<div style={{
     opacity: 0.5
 }}/>);
 
-class App extends Component {
+class App extends PureComponent {
     constructor(props) {
         super(props);
-
-        this.state = {
-            shutdown: false,
-            paused: false,
-            expanded: false,
-            selected: snAll
-        };
-
         this.settings = getSettings();
     }
+
+    state = {
+        shutdown: false,
+        paused: false,
+        expanded: false,
+        selected: snAll
+    };
 
     setShutdown = () => {
         axios.get(`${this.settings.baseUrl}/shutdown`)

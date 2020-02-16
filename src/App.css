@@ -7,4 +7,9 @@
     color: white;
     min-height: 100vh;
     overflow: hidden;
+    display: flex;
+}
+
+.highlighted td, .highlighted:hover td {
+    background-color: rgba(150, 150, 150, 0.4);
 }

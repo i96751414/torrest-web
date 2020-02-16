@@ -12,7 +12,7 @@ import axios from "axios";
 const Main = styled.main`
     position: relative;
     transition: all .2s;
-    margin-left: ${props => (props.expanded ? 240 : 64)}px;
+    width: calc(100% - ${props => (props.expanded ? 240 : 64)}px);
 `;
 
 const Disable = () => (<div style={{

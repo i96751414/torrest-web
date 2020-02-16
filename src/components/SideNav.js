@@ -1,6 +1,7 @@
 import React, {PureComponent} from "react";
 import SideNav, {Nav, NavIcon, NavItem, NavText, Toggle} from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import styled from 'styled-components';
 
 export const snAll = "all";
@@ -36,7 +37,7 @@ const StyledNav = styled(Nav)`
 `;
 StyledNav.defaultProps = Nav.defaultProps;
 
-const Icon = styled.i`
+const Icon = styled(FontAwesomeIcon)`
     font-size: 1.75em;
     vertical-align: middle;
 `;
@@ -59,26 +60,26 @@ export default class TorrestSideNav extends PureComponent {
                 <StyledNav defaultSelected={this.props.selected} id="nav">
                     <NavItem eventKey={snAll}>
                         <NavIcon>
-                            <Icon className="fa fa-magnet"/>
+                            <Icon icon="magnet"/>
                         </NavIcon>
                         <NavText>All</NavText>
                     </NavItem>
                     <Hr/>
                     <NavItem eventKey={snSettings}>
                         <NavIcon>
-                            <Icon className="fa fa-cogs"/>
+                            <Icon icon="cogs"/>
                         </NavIcon>
                         <NavText>Settings</NavText>
                     </NavItem>
                     <NavItem eventKey={snPauseResume} disabled={true} onClick={this.props.onPause}>
                         <NavIcon>
-                            <Icon className={`fa fa-${this.props.paused ? "play" : "pause"}`}/>
+                            <Icon icon={this.props.paused ? "play" : "pause"}/>
                         </NavIcon>
                         <NavText>{this.props.paused ? "Resume" : "Pause"}</NavText>
                     </NavItem>
                     <NavItem eventKey={snShutdown} disabled={true} onClick={this.props.onShutdown}>
                         <NavIcon>
-                            <Icon className="fa fa-power-off"/>
+                            <Icon icon="power-off"/>
                         </NavIcon>
                         <NavText>Shutdown</NavText>
                     </NavItem>

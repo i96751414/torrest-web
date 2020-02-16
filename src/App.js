@@ -4,10 +4,14 @@ import TorrestSideNav, {snAll, snSettings} from "./components/SideNav";
 import Settings, {getSettings} from "./components/Settings";
 import Torrents from "./components/Torrents";
 import styled from 'styled-components';
-import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {withAlert} from "react-alert";
+import {library} from "@fortawesome/fontawesome-svg-core"
+import {faMagnet, faCogs, faPlay, faPause, faPowerOff, faFileUpload, faLink, faMinus, faStop, faDownload, faFileAlt}
+    from "@fortawesome/free-solid-svg-icons"
 import axios from "axios";
+
+library.add(faMagnet, faCogs, faPlay, faPause, faPowerOff, faFileUpload, faLink, faMinus, faStop, faDownload, faFileAlt);
 
 const Main = styled.main`
     position: relative;

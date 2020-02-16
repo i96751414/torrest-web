@@ -6,6 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import {CircleButton, CustomFormControl, CustomModal, OverlayTooltip} from "./BootsrapUtils";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import axios from "axios";
 
 function humanFileSize(size) {
@@ -227,12 +228,12 @@ export default class Torrents extends PureComponent {
                                style={{display: "none"}}/>
                         <OverlayTooltip message="Add file">
                             <CircleButton variant="outline-light" onClick={this.addFileOnClick}>
-                                <i className="fa fa-file-upload"/>
+                                <FontAwesomeIcon icon="file-upload"/>
                             </CircleButton>
                         </OverlayTooltip>
                         <OverlayTooltip message="Add magnet">
                             <CircleButton variant="outline-light" onClick={this.showMagnetModal}>
-                                <i className="fa fa-link"/>
+                                <FontAwesomeIcon icon="link"/>
                             </CircleButton>
                         </OverlayTooltip>
                         <Nav className="mr-auto"/>
@@ -242,14 +243,14 @@ export default class Torrents extends PureComponent {
                                 onClick={this.removeTorrent}
                                 disabled={this.state.selected === null}
                             >
-                                <i className="fa fa-minus"/>
+                                <FontAwesomeIcon icon="minus"/>
                             </CircleButton>
                         </OverlayTooltip>
                         {this.state.selected !== null &&
                         this.state.torrents.some(t => t.info_hash === this.state.selected && t.status.state === 8) ?
                             <OverlayTooltip message="Resume torrent">
                                 <CircleButton variant="outline-light" onClick={this.resumeTorrent}>
-                                    <i className="fa fa-play"/>
+                                    <FontAwesomeIcon icon="play"/>
                                 </CircleButton>
                             </OverlayTooltip> :
                             <OverlayTooltip message="Pause torrent">
@@ -258,7 +259,7 @@ export default class Torrents extends PureComponent {
                                     onClick={this.pauseTorrent}
                                     disabled={this.state.selected === null}
                                 >
-                                    <i className="fa fa-pause"/>
+                                    <FontAwesomeIcon icon="pause"/>
                                 </CircleButton>
                             </OverlayTooltip>
                         }
@@ -266,7 +267,7 @@ export default class Torrents extends PureComponent {
                         this.state.torrents.some(t => t.info_hash === this.state.selected && t.status.total === t.status.total_wanted) ?
                             <OverlayTooltip message="Stop downloading">
                                 <CircleButton variant="outline-light" onClick={this.stopTorrent}>
-                                    <i className="fa fa-stop"/>
+                                    <FontAwesomeIcon icon="stop"/>
                                 </CircleButton>
                             </OverlayTooltip> :
                             <OverlayTooltip message="Start downloading">
@@ -275,7 +276,7 @@ export default class Torrents extends PureComponent {
                                     onClick={this.downloadTorrent}
                                     disabled={this.state.selected === null}
                                 >
-                                    <i className="fa fa-download"/>
+                                    <FontAwesomeIcon icon="download"/>
                                 </CircleButton>
                             </OverlayTooltip>
                         }
@@ -285,7 +286,7 @@ export default class Torrents extends PureComponent {
                                 onClick={this.showFiles}
                                 disabled={this.state.selected === null}
                             >
-                                <i className="fa fa-file-alt"/>
+                                <FontAwesomeIcon icon="file-alt"/>
                             </CircleButton>
                         </OverlayTooltip>
                     </Navbar.Collapse>

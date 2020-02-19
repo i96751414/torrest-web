@@ -73,9 +73,60 @@ const TorrentsTable = ({torrents, onClick}) => (
     </Table>
 );
 
+const FilesModal = ({title, show, onHide, files, onDownloadClick, onStopClick}) => (
+    <CustomModal
+        show={show}
+        onHide={onHide}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+    >
+        <Modal.Header style={{borderBottom: "0px"}} closeButton>
+            <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <Table responsive>
+                <tbody>
+                {files.map(file =>
+                    <tr key={file.id} id={file.id}>
+                        <td className="align-middle">{file.id + 1} - {file.name}</td>
+                        <td className="align-middle fit">
+                            {file.status.priority === 0 ?
+                                <OverlayTooltip message="Start downloading">
+                                    <Button variant="outline-dark" onClick={onDownloadClick}>
+                                        <FontAwesomeIcon icon="download"/>
+                                    </Button>
+                                </OverlayTooltip> :
+                                <OverlayTooltip message="Stop downloading">
+                                    <Button variant="outline-dark" onClick={onStopClick}>
+                                        <FontAwesomeIcon icon="stop"/>
+                                    </Button>
+                                </OverlayTooltip>
+                            }
+                        </td>
+                        <td className="align-middle fit">
+                            <OverlayTooltip message="Start streaming">
+                                <Button variant="outline-dark">
+                                    <FontAwesomeIcon icon="play-circle"/>
+                                </Button>
+                            </OverlayTooltip>
+                        </td>
+                    </tr>
+                )}
+                </tbody>
+            </Table>
+        </Modal.Body>
+    </CustomModal>
+);
+
 export default class Torrents extends PureComponent {
     state = {
         showMagnetModal: false,
+
+        showFilesModal: false,
+        filesModalTitle: "",
+        files: [],
+
         torrents: [],
         selected: null
     };
@@ -147,7 +198,10 @@ export default class Torrents extends PureComponent {
     removeTorrent = () => {
         axios.get(`${this.props.settings.baseUrl}/torrents/${this.state.selected}/remove`)
             .then(() => this.getData())
-            .catch(e => console.log(e))
+            .catch(e => {
+                console.log(e);
+                this.props.alert.error("Failed removing torrent");
+            })
     };
 
     pauseTorrent = () => {
@@ -194,13 +248,64 @@ export default class Torrents extends PureComponent {
             })
     };
 
-    showFiles = () => {
-        // TODO: show files with stream options
+    hideFilesModal = () => {
+        clearInterval(this.getFilesInterval);
+        this.getFilesInterval = undefined;
+        this.setState({showFilesModal: false});
+    };
+
+    showFilesModal = () => {
+        // noinspection JSUnresolvedVariable
+        const torrent = this.state.torrents.find(t => t.info_hash === this.state.selected);
+        if (torrent) {
+            this.getFiles(() => {
+                this.setState({showFilesModal: true, filesModalTitle: torrent.status.name});
+                this.getFilesInterval = setInterval(this.getFiles, 2000);
+            }, () => {
+                this.props.alert.error("Failed to get files");
+            });
+        }
+    };
+
+    onFileDownloadClick = e => {
+        const id = e.currentTarget.parentElement.parentElement.id;
+        axios.get(`${this.props.settings.baseUrl}/torrents/${this.state.selected}/files/${id}/download`)
+            .then(() => {
+                this.props.alert.show("File downloading");
+                this.getFiles();
+            })
+            .catch(() => this.props.alert.error("Failed starting file download"))
+    };
+
+    onFileStopClick = e => {
+        const id = e.currentTarget.parentElement.parentElement.id;
+        axios.get(`${this.props.settings.baseUrl}/torrents/${this.state.selected}/files/${id}/stop`)
+            .then(() => {
+                this.props.alert.show("File stopped");
+                this.getFiles();
+            })
+            .catch(() => this.props.alert.error("Failed stopping file"))
+    };
+
+    getFiles = (onSuccess, onError) => {
+        if (this.state.selected === null) {
+            this.hideFilesModal();
+        } else {
+            axios.get(`${this.props.settings.baseUrl}/torrents/${this.state.selected}/files`, {params: {status: true}})
+                .then(r => {
+                    this.setState({files: r.data});
+                    onSuccess && onSuccess();
+                })
+                .catch(() => {
+                    this.hideFilesModal();
+                    onError && onError();
+                })
+        }
     };
 
     componentDidMount() {
         this.getData();
-        this.intervalID = setInterval(this.getData, 2000);
+        this.getDataInterval = setInterval(this.getData, 2000);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -210,7 +315,7 @@ export default class Torrents extends PureComponent {
     }
 
     componentWillUnmount() {
-        clearInterval(this.intervalID);
+        clearInterval(this.getDataInterval);
     }
 
     render() {
@@ -283,7 +388,7 @@ export default class Torrents extends PureComponent {
                         <OverlayTooltip message="Torrent files">
                             <CircleButton
                                 variant="outline-light"
-                                onClick={this.showFiles}
+                                onClick={this.showFilesModal}
                                 disabled={this.state.selected === null}
                             >
                                 <FontAwesomeIcon icon="file-alt"/>
@@ -316,6 +421,14 @@ export default class Torrents extends PureComponent {
                         <Button variant="outline-info" onClick={this.hideMagnetModal}>Close</Button>
                     </Modal.Footer>
                 </CustomModal>
+                <FilesModal
+                    title={this.state.filesModalTitle}
+                    files={this.state.files}
+                    show={this.state.showFilesModal}
+                    onHide={this.hideFilesModal}
+                    onDownloadClick={this.onFileDownloadClick}
+                    onStopClick={this.onFileStopClick}
+                />
                 <Container style={{marginTop: "50px"}}>
                     <TorrentsTable torrents={this.state.torrents} onClick={this.tableRowOnClick}/>
                 </Container>

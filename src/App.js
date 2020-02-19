@@ -7,11 +7,14 @@ import styled from 'styled-components';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {withAlert} from "react-alert";
 import {library} from "@fortawesome/fontawesome-svg-core"
-import {faMagnet, faCogs, faPlay, faPause, faPowerOff, faFileUpload, faLink, faMinus, faStop, faDownload, faFileAlt}
-    from "@fortawesome/free-solid-svg-icons"
+import {
+    faMagnet, faCogs, faPlay, faPause, faPowerOff, faFileUpload, faLink, faMinus, faStop, faDownload, faFileAlt,
+    faPlayCircle
+} from "@fortawesome/free-solid-svg-icons"
 import axios from "axios";
 
-library.add(faMagnet, faCogs, faPlay, faPause, faPowerOff, faFileUpload, faLink, faMinus, faStop, faDownload, faFileAlt);
+library.add(faMagnet, faCogs, faPlay, faPause, faPowerOff, faFileUpload, faLink, faMinus, faStop, faDownload, faFileAlt,
+    faPlayCircle);
 
 const Main = styled.main`
     position: relative;

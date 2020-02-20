@@ -60,8 +60,8 @@ const TorrentsTable = ({torrents, onClick}) => (
         <tbody>
         {torrents.map(torrent =>
             <tr key={torrent.info_hash} id={torrent.info_hash} onClick={onClick}>
-                <td>{torrent.status.name}</td>
-                <td>{humanFileSize(torrent.status.total)}</td>
+                <td>{torrent.name}</td>
+                <td>{humanFileSize(torrent.size)}</td>
                 <td>{torrent.status.progress.toFixed(2)}%</td>
                 <td>{statusString(torrent.status.state)}</td>
                 <td>{humanFileSize(torrent.status.download_rate)}/s {humanFileSize(torrent.status.upload_rate)}/s</td>
@@ -73,7 +73,7 @@ const TorrentsTable = ({torrents, onClick}) => (
     </Table>
 );
 
-const FilesModal = ({title, show, onHide, files, onDownloadClick, onStopClick}) => (
+const FilesModal = ({title, show, onHide, files, onDownloadClick, onStopClick, onStreamClick}) => (
     <CustomModal
         show={show}
         onHide={onHide}
@@ -106,7 +106,7 @@ const FilesModal = ({title, show, onHide, files, onDownloadClick, onStopClick}) 
                         </td>
                         <td className="align-middle fit">
                             <OverlayTooltip message="Start streaming">
-                                <Button variant="outline-dark">
+                                <Button variant="outline-dark" onClick={onStreamClick}>
                                     <FontAwesomeIcon icon="play-circle"/>
                                 </Button>
                             </OverlayTooltip>
@@ -123,12 +123,15 @@ export default class Torrents extends PureComponent {
     state = {
         showMagnetModal: false,
 
+        torrents: [],
+        selected: null,
+
         showFilesModal: false,
         filesModalTitle: "",
         files: [],
 
-        torrents: [],
-        selected: null
+        showPlayerModal: false,
+        playerUrl: null
     };
 
     setMagnetUriRef = ref => this.magnetUri = ref;
@@ -259,7 +262,7 @@ export default class Torrents extends PureComponent {
         const torrent = this.state.torrents.find(t => t.info_hash === this.state.selected);
         if (torrent) {
             this.getFiles(() => {
-                this.setState({showFilesModal: true, filesModalTitle: torrent.status.name});
+                this.setState({showFilesModal: true, filesModalTitle: torrent.name});
                 this.getFilesInterval = setInterval(this.getFiles, 2000);
             }, () => {
                 this.props.alert.error("Failed to get files");
@@ -301,6 +304,19 @@ export default class Torrents extends PureComponent {
                     onError && onError();
                 })
         }
+    };
+
+    hidePlayerModal = () => {
+        this.setState({showPlayerModal: false, playerUrl: null});
+    };
+
+    showPlayerModal = e => {
+        const id = e.currentTarget.parentElement.parentElement.id;
+        this.hideFilesModal();
+        this.setState({
+            showPlayerModal: true,
+            playerUrl: `${this.props.settings.baseUrl}/torrents/${this.state.selected}/files/${id}/serve`
+        });
     };
 
     componentDidMount() {
@@ -428,7 +444,20 @@ export default class Torrents extends PureComponent {
                     onHide={this.hideFilesModal}
                     onDownloadClick={this.onFileDownloadClick}
                     onStopClick={this.onFileStopClick}
+                    onStreamClick={this.showPlayerModal}
                 />
+                <CustomModal
+                    show={this.state.showPlayerModal}
+                    onHide={this.hidePlayerModal}
+                    size="xl"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <video width="100%" controls autoPlay>
+                        <source src={this.state.playerUrl}/>
+                        Your browser does not support HTML5 video.
+                    </video>
+                </CustomModal>
                 <Container style={{marginTop: "50px"}}>
                     <TorrentsTable torrents={this.state.torrents} onClick={this.tableRowOnClick}/>
                 </Container>

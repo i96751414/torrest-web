@@ -162,8 +162,10 @@ export default class Torrents extends PureComponent {
         this.setState({selected: tr.id});
     };
 
-    onFileUpload = () => {
-        const file = this.upload.files[0];
+    onFileUpload = (event) => {
+        const file = event.target.files[0];
+        // Required to allow setting the same file again
+        event.target.value = null;
         let formData = new FormData();
         formData.append("torrent", file);
         axios.post(`${this.props.settings.baseUrl}/add/torrent`, formData,

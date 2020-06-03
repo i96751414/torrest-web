@@ -43,8 +43,8 @@ function statusString(state) {
 }
 
 // noinspection JSUnresolvedVariable
-const TorrentsTable = ({torrents, onClick}) => (
-    <Table bordered hover responsive variant="dark"
+const TorrentsTable = ({torrents, onClick, onDoubleClick}) => (
+    <Table className="noselect" bordered hover responsive variant="dark"
            style={{backgroundColor: "rgba(52, 58, 64, 0.9)"}}>
         <thead>
         <tr>
@@ -59,7 +59,7 @@ const TorrentsTable = ({torrents, onClick}) => (
         </thead>
         <tbody>
         {torrents.map(torrent =>
-            <tr key={torrent.info_hash} id={torrent.info_hash} onClick={onClick}>
+            <tr key={torrent.info_hash} id={torrent.info_hash} onClick={onClick} onDoubleClick={onDoubleClick}>
                 <td>{torrent.name}</td>
                 <td>{humanFileSize(torrent.size)}</td>
                 <td>{torrent.status.progress.toFixed(2)}%</td>
@@ -474,7 +474,11 @@ export default class Torrents extends PureComponent {
                 </CustomModal>
                 <Container style={{marginTop: "50px"}}>
                     {this.state.torrents.length > 0 ?
-                        <TorrentsTable torrents={this.state.torrents} onClick={this.tableRowOnClick}/> :
+                        <TorrentsTable
+                            torrents={this.state.torrents}
+                            onClick={this.tableRowOnClick}
+                            onDoubleClick={this.showFilesModal}
+                        /> :
                         <div>
                             <h4>No torrents yet - Add the first one</h4>
                             <br/>

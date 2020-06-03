@@ -11,11 +11,13 @@ import {CustomFormControl, OverlayTooltip} from "./BootsrapUtils";
 export function getSettings() {
     const baseUrl = localStorage.getItem("baseUrl");
     const refreshRate = localStorage.getItem("refreshRate");
-    const remember = Boolean(baseUrl && refreshRate);
+    const downloadOnAdd = localStorage.getItem("downloadOnAdd");
+    const remember = Boolean(baseUrl && refreshRate && downloadOnAdd);
 
     return {
         baseUrl: remember ? baseUrl : "http://localhost:8080",
         refreshRate: remember ? refreshRate : 1,
+        downloadOnAdd: remember ? downloadOnAdd === "true" : false,
         remember: remember
     }
 }
@@ -108,6 +110,20 @@ export default class Settings extends PureComponent {
                                     defaultValue={this.settings.refreshRate}
                                     required
                                 />
+                            </InputGroup>
+                            <InputGroup className="mb-3">
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text>Start download after addition</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <CustomFormControl disabled={true}/>
+                                <InputGroup.Append>
+                                    <InputGroup.Checkbox
+                                        defaultChecked={this.settings.downloadOnAdd}
+                                        onChange={this.onChangeCheck}
+                                        name="downloadOnAdd"
+                                        aria-label="Start download after addition"
+                                    />
+                                </InputGroup.Append>
                             </InputGroup>
                             <InputGroup>
                                 <InputGroup.Prepend>

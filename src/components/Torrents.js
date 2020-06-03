@@ -166,8 +166,8 @@ export default class Torrents extends PureComponent {
         const file = this.upload.files[0];
         let formData = new FormData();
         formData.append("torrent", file);
-        axios.post(`${this.props.settings.baseUrl}/add/torrent`,
-            formData, {headers: {"Content-Type": "multipart/form-data"}})
+        axios.post(`${this.props.settings.baseUrl}/add/torrent`, formData,
+            {params: {download: this.props.settings.downloadOnAdd}, headers: {"Content-Type": "multipart/form-data"}})
             .then(() => {
                 this.props.alert.show("Torrent added");
                 this.getData();
@@ -181,7 +181,8 @@ export default class Torrents extends PureComponent {
         if (uri === "") {
             this.props.alert.error("Empty magnet URI");
         } else {
-            axios.get(`${this.props.settings.baseUrl}/add/magnet`, {params: {uri}})
+            axios.get(`${this.props.settings.baseUrl}/add/magnet`,
+                {params: {uri: uri, download: this.props.settings.downloadOnAdd}})
                 .then(() => {
                     this.props.alert.show("Magnet added");
                     this.getData();

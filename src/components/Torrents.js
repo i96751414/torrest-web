@@ -134,14 +134,22 @@ export default class Torrents extends PureComponent {
         playerUrl: null
     };
 
-    setMagnetUriRef = ref => this.magnetUri = ref;
+    setInitMagnetUriRef = ref => this.initMagnetUri = ref;
+    setModalMagnetUriRef = ref => this.modalMagnetUri = ref;
     setUploadRef = ref => this.upload = ref;
     addFileOnClick = () => this.upload.click();
     showMagnetModal = () => this.setState({showMagnetModal: true});
     hideMagnetModal = () => this.setState({showMagnetModal: false});
-    magnetModalOnKeyPress = event => {
+
+    initMagnetUriOnKeyPress = event => {
         if (event.key === "Enter") {
-            this.onAddMagnetUri()
+            this.onInitAddMagnetUri()
+        }
+    };
+
+    modalMagnetUriOnKeyPress = event => {
+        if (event.key === "Enter") {
+            this.onModalAddMagnetUri()
         }
     };
 
@@ -169,20 +177,26 @@ export default class Torrents extends PureComponent {
             })
     };
 
-    onAddMagnetUri = () => {
-        if (this.magnetUri.value === "") {
+    addMagnetUri = uri => {
+        if (uri === "") {
             this.props.alert.error("Empty magnet URI");
         } else {
-            axios.get(`${this.props.settings.baseUrl}/add/magnet`, {params: {uri: this.magnetUri.value}})
+            axios.get(`${this.props.settings.baseUrl}/add/magnet`, {params: {uri}})
                 .then(() => {
                     this.props.alert.show("Magnet added");
                     this.getData();
                 })
                 .catch(() => {
                     this.props.alert.error("Failed adding magnet");
-                });
-            this.hideMagnetModal();
+                })
         }
+    }
+
+    onInitAddMagnetUri = () => this.addMagnetUri(this.initMagnetUri.value)
+
+    onModalAddMagnetUri = () => {
+        this.addMagnetUri(this.modalMagnetUri.value);
+        this.hideMagnetModal()
     };
 
     getData = () => {
@@ -326,7 +340,7 @@ export default class Torrents extends PureComponent {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.showMagnetModal) {
-            this.magnetUri.focus();
+            this.modalMagnetUri.focus();
         }
     }
 
@@ -425,15 +439,15 @@ export default class Torrents extends PureComponent {
                     <Modal.Body>
                         <CustomFormControl
                             type="text"
-                            ref={this.setMagnetUriRef}
+                            ref={this.setModalMagnetUriRef}
                             placeholder="Magnet URI"
                             aria-label="Magnet URI"
-                            onKeyPress={this.magnetModalOnKeyPress}
+                            onKeyPress={this.modalMagnetUriOnKeyPress}
                             required
                         />
                     </Modal.Body>
                     <Modal.Footer style={{borderTop: "0px"}}>
-                        <Button variant="outline-info" onClick={this.onAddMagnetUri}>Add</Button>
+                        <Button variant="outline-info" onClick={this.onModalAddMagnetUri}>Add</Button>
                         <Button variant="outline-info" onClick={this.hideMagnetModal}>Close</Button>
                     </Modal.Footer>
                 </CustomModal>
@@ -459,7 +473,21 @@ export default class Torrents extends PureComponent {
                     </video>
                 </CustomModal>
                 <Container style={{marginTop: "50px"}}>
-                    <TorrentsTable torrents={this.state.torrents} onClick={this.tableRowOnClick}/>
+                    {this.state.torrents.length > 0 ?
+                        <TorrentsTable torrents={this.state.torrents} onClick={this.tableRowOnClick}/> :
+                        <div>
+                            <h4>No torrents yet - Add the first one</h4>
+                            <br/>
+                            <CustomFormControl
+                                type="text"
+                                ref={this.setInitMagnetUriRef}
+                                placeholder="Magnet URI"
+                                aria-label="Magnet URI"
+                                onKeyPress={this.initMagnetUriOnKeyPress}
+                                required
+                            />
+                        </div>
+                    }
                 </Container>
             </div>
         )

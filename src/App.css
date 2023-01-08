@@ -11,7 +11,7 @@
 }
 
 .highlighted td, .highlighted:hover td {
-    background-color: rgba(150, 150, 150, 0.4);
+    background-color: rgba(80, 80, 80, 0.9)!important;
 }
 
 .fit {

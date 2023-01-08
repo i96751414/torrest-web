@@ -14,7 +14,7 @@ export const CustomModal = styled(Modal)`
 CustomModal.defaultProps = Modal.defaultProps;
 
 export const CircleButton = styled(Button)`
-    margin: 0px 5px;
+    margin: 0 5px;
     border-radius: 19px;
     height: 38px;
     width: 38px;
@@ -39,7 +39,7 @@ CustomFormControl.defaultProps = FormControl.defaultProps;
 
 export class OverlayTooltip extends PureComponent {
     renderTooltip = props => {
-        return <Tooltip {...props} show={props.show.toString()}>{this.props.message}</Tooltip>;
+        return <Tooltip {...props}>{this.props.message}</Tooltip>;
     };
 
     render() {

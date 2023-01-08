@@ -16,6 +16,7 @@ export function getSettings() {
 
     return {
         baseUrl: remember ? baseUrl : "http://localhost:8080",
+        // TODO: Add refresh rate to getData
         refreshRate: remember ? refreshRate : 1,
         downloadOnAdd: remember ? downloadOnAdd === "true" : false,
         remember: remember
@@ -84,9 +85,7 @@ export default class Settings extends PureComponent {
                          style={{minHeight: this.state.minHeight, display: "flex", alignItems: "center"}}>
                         <Col md={{span: 6, offset: 3}} xl={{span: 4, offset: 4}}>
                             <InputGroup className="mb-3">
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Base URL</InputGroup.Text>
-                                </InputGroup.Prepend>
+                                <InputGroup.Text>Base URL</InputGroup.Text>
                                 <CustomFormControl
                                     type="text"
                                     placeholder="eg. http://localhost:8080"
@@ -98,9 +97,7 @@ export default class Settings extends PureComponent {
                                 />
                             </InputGroup>
                             <InputGroup className="mb-3">
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Refresh rate</InputGroup.Text>
-                                </InputGroup.Prepend>
+                                <InputGroup.Text>Refresh rate</InputGroup.Text>
                                 <CustomFormControl
                                     type="number"
                                     placeholder="eg. 1"
@@ -112,32 +109,24 @@ export default class Settings extends PureComponent {
                                 />
                             </InputGroup>
                             <InputGroup className="mb-3">
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Start download after addition</InputGroup.Text>
-                                </InputGroup.Prepend>
+                                <InputGroup.Text>Start download after addition</InputGroup.Text>
                                 <CustomFormControl disabled={true}/>
-                                <InputGroup.Append>
-                                    <InputGroup.Checkbox
-                                        defaultChecked={this.settings.downloadOnAdd}
-                                        onChange={this.onChangeCheck}
-                                        name="downloadOnAdd"
-                                        aria-label="Start download after addition"
-                                    />
-                                </InputGroup.Append>
+                                <InputGroup.Checkbox
+                                    defaultChecked={this.settings.downloadOnAdd}
+                                    onChange={this.onChangeCheck}
+                                    name="downloadOnAdd"
+                                    aria-label="Start download after addition"
+                                />
                             </InputGroup>
                             <InputGroup>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Remember settings</InputGroup.Text>
-                                </InputGroup.Prepend>
+                                <InputGroup.Text>Remember settings</InputGroup.Text>
                                 <CustomFormControl disabled={true}/>
-                                <InputGroup.Append>
-                                    <InputGroup.Checkbox
-                                        defaultChecked={this.settings.remember}
-                                        onChange={this.onChangeCheck}
-                                        name="remember"
-                                        aria-label="Remember settings"
-                                    />
-                                </InputGroup.Append>
+                                <InputGroup.Checkbox
+                                    defaultChecked={this.settings.remember}
+                                    onChange={this.onChangeCheck}
+                                    name="remember"
+                                    aria-label="Remember settings"
+                                />
                             </InputGroup>
                         </Col>
                     </Row>

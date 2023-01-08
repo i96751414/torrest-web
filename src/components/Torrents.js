@@ -45,7 +45,7 @@ function statusString(state) {
 // noinspection JSUnresolvedVariable
 const TorrentsTable = ({torrents, onClick, onDoubleClick}) => (
     <Table className="noselect" bordered hover responsive variant="dark"
-           style={{backgroundColor: "rgba(52, 58, 64, 0.9)"}}>
+           style={{opacity: 0.9}}>
         <thead>
         <tr>
             <th>Name</th>
@@ -203,7 +203,7 @@ export default class Torrents extends PureComponent {
     };
 
     getData = () => {
-        axios.get(`${this.props.settings.baseUrl}/torrents/`, {params: {status: true}})
+        axios.get(`${this.props.settings.baseUrl}/torrents`, {params: {status: true}})
             .then(r => {
                 let selected = this.state.selected;
                 // noinspection JSUnresolvedVariable
@@ -356,78 +356,80 @@ export default class Torrents extends PureComponent {
         return (
             <div>
                 <Navbar ref={this.navRef} bg="dark" variant="dark" expand="sm" style={{opacity: 0.9}}>
-                    <Navbar.Brand>Torrest - all</Navbar.Brand>
-                    <Navbar.Toggle/>
-                    <Navbar.Collapse>
-                        <input type="file"
-                               accept=".torrent"
-                               ref={this.setUploadRef}
-                               onChange={this.onFileUpload}
-                               style={{display: "none"}}/>
-                        <OverlayTooltip message="Add file">
-                            <CircleButton variant="outline-light" onClick={this.addFileOnClick}>
-                                <FontAwesomeIcon icon="file-upload"/>
-                            </CircleButton>
-                        </OverlayTooltip>
-                        <OverlayTooltip message="Add magnet">
-                            <CircleButton variant="outline-light" onClick={this.showMagnetModal}>
-                                <FontAwesomeIcon icon="link"/>
-                            </CircleButton>
-                        </OverlayTooltip>
-                        <Nav className="mr-auto"/>
-                        <OverlayTooltip message="Remove torrent">
-                            <CircleButton
-                                variant="outline-light"
-                                onClick={this.removeTorrent}
-                                disabled={this.state.selected === null}
-                            >
-                                <FontAwesomeIcon icon="minus"/>
-                            </CircleButton>
-                        </OverlayTooltip>
-                        {this.state.selected !== null &&
-                        this.state.torrents.some(t => t.info_hash === this.state.selected && t.status.state === 8) ?
-                            <OverlayTooltip message="Resume torrent">
-                                <CircleButton variant="outline-light" onClick={this.resumeTorrent}>
-                                    <FontAwesomeIcon icon="play"/>
-                                </CircleButton>
-                            </OverlayTooltip> :
-                            <OverlayTooltip message="Pause torrent">
-                                <CircleButton
-                                    variant="outline-light"
-                                    onClick={this.pauseTorrent}
-                                    disabled={this.state.selected === null}
-                                >
-                                    <FontAwesomeIcon icon="pause"/>
+                    <Container fluid={true}>
+                        <Navbar.Brand>Torrest - all</Navbar.Brand>
+                        <Navbar.Toggle/>
+                        <Navbar.Collapse>
+                            <input type="file"
+                                   accept=".torrent"
+                                   ref={this.setUploadRef}
+                                   onChange={this.onFileUpload}
+                                   style={{display: "none"}}/>
+                            <OverlayTooltip message="Add file">
+                                <CircleButton variant="outline-light" onClick={this.addFileOnClick}>
+                                    <FontAwesomeIcon icon="file-upload"/>
                                 </CircleButton>
                             </OverlayTooltip>
-                        }
-                        {this.state.selected !== null &&
-                        this.state.torrents.some(t => t.info_hash === this.state.selected && t.status.total === t.status.total_wanted) ?
-                            <OverlayTooltip message="Stop downloading">
-                                <CircleButton variant="outline-light" onClick={this.stopTorrent}>
-                                    <FontAwesomeIcon icon="stop"/>
-                                </CircleButton>
-                            </OverlayTooltip> :
-                            <OverlayTooltip message="Start downloading">
-                                <CircleButton
-                                    variant="outline-light"
-                                    onClick={this.downloadTorrent}
-                                    disabled={this.state.selected === null}
-                                >
-                                    <FontAwesomeIcon icon="download"/>
+                            <OverlayTooltip message="Add magnet">
+                                <CircleButton variant="outline-light" onClick={this.showMagnetModal}>
+                                    <FontAwesomeIcon icon="link"/>
                                 </CircleButton>
                             </OverlayTooltip>
-                        }
-                        <OverlayTooltip message="Torrent files">
-                            <CircleButton
-                                variant="outline-light"
-                                onClick={this.showFilesModal}
-                                disabled={this.state.selected === null}
-                            >
-                                <FontAwesomeIcon icon="file-alt"/>
-                            </CircleButton>
-                        </OverlayTooltip>
-                    </Navbar.Collapse>
+                            <Nav className="ms-auto"/>
+                            <OverlayTooltip message="Remove torrent">
+                                <CircleButton
+                                    variant="outline-light"
+                                    onClick={this.removeTorrent}
+                                    disabled={this.state.selected === null}
+                                >
+                                    <FontAwesomeIcon icon="minus"/>
+                                </CircleButton>
+                            </OverlayTooltip>
+                            {this.state.selected !== null &&
+                            this.state.torrents.some(t => t.info_hash === this.state.selected && t.status.state === 8) ?
+                                <OverlayTooltip message="Resume torrent">
+                                    <CircleButton variant="outline-light" onClick={this.resumeTorrent}>
+                                        <FontAwesomeIcon icon="play"/>
+                                    </CircleButton>
+                                </OverlayTooltip> :
+                                <OverlayTooltip message="Pause torrent">
+                                    <CircleButton
+                                        variant="outline-light"
+                                        onClick={this.pauseTorrent}
+                                        disabled={this.state.selected === null}
+                                    >
+                                        <FontAwesomeIcon icon="pause"/>
+                                    </CircleButton>
+                                </OverlayTooltip>
+                            }
+                            {this.state.selected !== null &&
+                            this.state.torrents.some(t => t.info_hash === this.state.selected && t.status.total === t.status.total_wanted) ?
+                                <OverlayTooltip message="Stop downloading">
+                                    <CircleButton variant="outline-light" onClick={this.stopTorrent}>
+                                        <FontAwesomeIcon icon="stop"/>
+                                    </CircleButton>
+                                </OverlayTooltip> :
+                                <OverlayTooltip message="Start downloading">
+                                    <CircleButton
+                                        variant="outline-light"
+                                        onClick={this.downloadTorrent}
+                                        disabled={this.state.selected === null}
+                                    >
+                                        <FontAwesomeIcon icon="download"/>
+                                    </CircleButton>
+                                </OverlayTooltip>
+                            }
+                            <OverlayTooltip message="Torrent files">
+                                <CircleButton
+                                    variant="outline-light"
+                                    onClick={this.showFilesModal}
+                                    disabled={this.state.selected === null}
+                                >
+                                    <FontAwesomeIcon icon="file-alt"/>
+                                </CircleButton>
+                            </OverlayTooltip>
+                        </Navbar.Collapse>
+                    </Container>
                 </Navbar>
                 <CustomModal
                     show={this.state.showMagnetModal}
